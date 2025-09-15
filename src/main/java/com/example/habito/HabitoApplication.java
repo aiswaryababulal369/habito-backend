@@ -3,11 +3,19 @@ package com.example.habito;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Collections;
+
 @SpringBootApplication
 public class HabitoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HabitoApplication.class, args);
+		SpringApplication app = new SpringApplication(HabitoApplication.class);
+		String port = System.getenv("PORT"); // Railway dynamic portS
+		if (port != null) {
+			app.setDefaultProperties(Collections.singletonMap("server.port", port));
+		}
+		app.run(args);
+
 	}
 
 }
