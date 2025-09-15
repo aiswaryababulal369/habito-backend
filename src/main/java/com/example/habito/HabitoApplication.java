@@ -11,7 +11,7 @@ public class HabitoApplication {
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(HabitoApplication.class);
 		String port = System.getenv("PORT"); // Railway dynamic portS
-		if (port != null) {
+		if (port != null && !port.isEmpty()) {
 			app.setDefaultProperties(Collections.singletonMap("server.port", port));
 		}
 		app.run(args);
