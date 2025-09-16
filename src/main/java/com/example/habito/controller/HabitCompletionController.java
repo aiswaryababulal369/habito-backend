@@ -12,7 +12,7 @@ import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
 @RestController
-@RequestMapping("/api/habits/completions")
+@RequestMapping("/api/habits")
 public class HabitCompletionController {
 
     private final HabitRepository habitRepository;
@@ -24,22 +24,31 @@ public class HabitCompletionController {
     }
 
     @PostMapping("/{habitId}/completions")
-    public HabitCompletion completeHabit(@PathVariable Long habitId) {
+    public HabitCompletion completeHabit(
+            @PathVariable Long habitId,
+            @RequestBody HabitCompletion request) {
+
         Habit habit = habitRepository.findById(habitId)
                 .orElseThrow(() -> new RuntimeException("Habit not found"));
 
-        HabitCompletion completion = new HabitCompletion();
+        LocalDate completionDate = request.getCompletionDate();
+
+        // Check if completion already exists
+        HabitCompletion completion = habitCompletionRepository
+                .findByHabitIdAndCompletionDate(habitId, completionDate)
+                .orElse(new HabitCompletion());
+
         completion.setHabit(habit);
-        completion.setCompletionDate(LocalDate.now());
+        completion.setCompletionDate(completionDate);
         completion.setIsCompleted(true);
 
         return habitCompletionRepository.save(completion);
     }
 
-//    @GetMapping("/{habitId}/completions")
-//    public List<HabitCompletion> getCompletions(@PathVariable Long habitId) {
-//        return habitCompletionRepository.findByHabitId(habitId);
-//    }
+    @GetMapping("/{habitId}/completions")
+    public List<HabitCompletion> getCompletions(@PathVariable Long habitId) {
+        return habitCompletionRepository.findByHabitId(habitId);
+    }
 
 //    @GetMapping("/today")
 //    public List<Map<String, Object>> getTodayHabits() {

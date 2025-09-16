@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface HabitCompletionRepository extends JpaRepository<HabitCompletion,Long> {
 
@@ -16,4 +17,8 @@ public interface HabitCompletionRepository extends JpaRepository<HabitCompletion
 
     // Check if a habit was completed on a specific date
     boolean existsByHabitIdAndCompletionDate(Long habitId, LocalDate completionDate);
+
+    List<HabitCompletion> findByHabitId(Long habitId);
+
+    Optional<HabitCompletion> findByHabitIdAndCompletionDate(Long habitId, LocalDate completionDate);
 }

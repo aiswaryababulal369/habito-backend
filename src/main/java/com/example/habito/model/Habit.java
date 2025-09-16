@@ -1,5 +1,6 @@
 package com.example.habito.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Habit {
 
     @Id
@@ -37,10 +39,8 @@ public class Habit {
     @Getter @Setter
     private String reminderTime; // format HH:mm
 
-    @ElementCollection
-    @Getter @Setter
-    private List<LocalDate> completions; // doneDates in frontend
 
-    // Optional: add a convenience method to calculate streak if needed
+
+
 
 }
