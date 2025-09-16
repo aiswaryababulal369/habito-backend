@@ -4,9 +4,11 @@ import com.example.habito.model.Habit;
 import com.example.habito.model.HabitCompletion;
 import com.example.habito.repository.HabitCompletionRepository;
 import com.example.habito.repository.HabitRepository;
+import com.example.habito.service.HabitService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,10 +19,12 @@ public class HabitCompletionController {
 
     private final HabitRepository habitRepository;
     private final HabitCompletionRepository habitCompletionRepository;
+    private final HabitService habitService;
 
-    public HabitCompletionController(HabitRepository habitRepository, HabitCompletionRepository habitCompletionRepository) {
+    public HabitCompletionController(HabitRepository habitRepository, HabitCompletionRepository habitCompletionRepository, HabitService habitService) {
         this.habitRepository = habitRepository;
         this.habitCompletionRepository = habitCompletionRepository;
+        this.habitService = habitService;
     }
 
     @PostMapping("/{habitId}/completions")
@@ -50,16 +54,16 @@ public class HabitCompletionController {
         return habitCompletionRepository.findByHabitId(habitId);
     }
 
-//    @GetMapping("/today")
-//    public List<Map<String, Object>> getTodayHabits() {
-//        LocalDate today = LocalDate.now();
-//        return habitRepository.findAll().stream().map(habit -> {
-//            boolean completed = habitCompletionRepository.existsByHabitIdAndCompletionDate(habit.getId(), today);
-//            return Map.of("habitId", habit.getId(), "name", habit.getName(), "completed", completed);
-//        }).toList();
-//    }
+    @GetMapping("/{habitId}/streaks")
+    public Map<String, Integer> getStreaks(@PathVariable Long habitId) {
+        int currentStreak = habitService.getCurrentStreak(habitId);
+        int bestStreak = habitService.getBestStreak(habitId);
 
+        Map<String, Integer> response = new HashMap<>();
+        response.put("currentStreak", currentStreak);
+        response.put("bestStreak", bestStreak);
 
-
+        return response;
+    }
 
 }
